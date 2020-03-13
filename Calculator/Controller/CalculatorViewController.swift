@@ -25,6 +25,8 @@ class CalculatorViewController: UIViewController {
             displayLabel.text = String(newValue)
         }
     }
+    
+    private var calLogic = CalculateLogic()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,13 +35,13 @@ class CalculatorViewController: UIViewController {
     
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         isEndEditNumber = true
+        calLogic.setNumber(displayValue)
         
         if let calMethod = sender.currentTitle {
-            let calLogic = CalculateLogic(number: displayValue)
-            guard let result = calLogic.calculate(symbol: calMethod) else {
-                fatalError("Error Convert to Double ")
+            if let result = calLogic.calculate(symbol: calMethod) {
+                displayValue = result
             }
-            displayValue = result
+            
         }
     }
     
