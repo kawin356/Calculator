@@ -12,6 +12,7 @@ struct CalculateLogic {
     
     private var number: Double?
     private var intermediateCalculation: (n1: Double, calMethod: String)?
+    private var isEqualagain: Bool = false
     
     mutating func setNumber(_ number: Double) {
         self.number = number
@@ -21,33 +22,45 @@ struct CalculateLogic {
         if let n = number {
             switch symbol {
             case "AC":
+                isEqualagain = false
                 return 0
             case "+/-":
                 return n * -1
             case "%":
-                return n / 100
+                if let newNum = intermediateCalculation?.n1 {
+                    return n / 100 * newNum
+                } else {
+                    return n / 100
+                }
             case "=":
                 return performNumberCalculation(newNum: n)
             default:
+                isEqualagain = false
                 self.intermediateCalculation = (n1: n, calMethod: symbol)
             }
         }
         return nil
     }
     
-    func performNumberCalculation(newNum: Double) -> Double? {
+    mutating func performNumberCalculation(newNum: Double) -> Double? {
         if let n1 = intermediateCalculation?.n1, let operation = intermediateCalculation?.calMethod {
+            defer {
+                if isEqualagain == false {
+                    self.intermediateCalculation = (n1: newNum, calMethod: operation)
+                    isEqualagain = true
+                }
+            }
             switch operation {
             case "+":
                 return n1 + newNum
             case "-":
-                return n1 - newNum
+                return !isEqualagain ? n1 - newNum : newNum - n1
             case "x":
                 return n1 * newNum
             case "/":
-                return n1 / newNum
+                return !isEqualagain ? n1 / newNum : newNum / n1
             default:
-                return 0.0
+                return nil
             }
         }
         return nil

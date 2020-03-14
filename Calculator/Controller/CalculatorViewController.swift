@@ -48,10 +48,18 @@ class CalculatorViewController: UIViewController {
     @IBAction func numButtonPressed(_ sender: UIButton) {
         if let numValue = sender.currentTitle {
             if isEndEditNumber {
-                displayLabel.text = numValue
                 isEndEditNumber = false
+                if numValue == "." {
+                    displayLabel.text = "0."
+                    return
+                }
+                displayLabel.text = numValue
             } else {
                 if numValue == "." {
+                    if (displayLabel.text?.hasPrefix("."))! {
+                        print("have .")
+                        return
+                    }
                     let isInt = floor(displayValue) == displayValue
                     if !isInt {
                         return
