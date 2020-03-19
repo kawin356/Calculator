@@ -22,7 +22,12 @@ class CalculatorViewController: UIViewController {
             return number
         }
         set {
-            displayLabel.text = String(newValue)
+            if checkHasDecimal(newValue){
+                displayLabel.text = String(format: "%.2f", newValue)
+            } else {
+                displayLabel.text = String(format: "%.0f", newValue)
+            }
+            
         }
     }
     
@@ -60,8 +65,8 @@ class CalculatorViewController: UIViewController {
                         print("have .")
                         return
                     }
-                    let isInt = floor(displayValue) == displayValue
-                    if !isInt {
+                    //let isInt = floor(displayValue) == displayValue
+                    if checkHasDecimal(displayValue) {
                         return
                     }
                 }
